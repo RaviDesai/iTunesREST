@@ -26,15 +26,15 @@ public func toDateFromString(format: String, dateString: String) -> NSDate? {
 }
 
 extension Dictionary {
-    mutating func addIf(key: Key, value: Value?) -> Void {
+    mutating func addIfNotNil(key: Key, value: Value?) -> Void {
         if let myvalue = value {
             self[key] = myvalue
         }
     }
     
-    mutating func addTuplesIf(tuples: (key: Key, value: Value?)...) -> Void {
+    mutating func addTuplesIfNotNil(tuples: (key: Key, value: Value?)...) -> Void {
         for tuple in tuples {
-            self.addIf(tuple.0, value: tuple.1)
+            self.addIfNotNil(tuple.0, value: tuple.1)
         }
     }
 }

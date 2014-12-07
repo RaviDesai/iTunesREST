@@ -127,7 +127,7 @@ public struct Content : SerializableToJSON {
     
     public func convertToJSON() -> JSONDictionary {
         var dict = JSONDictionary()
-        dict.addTuplesIf(
+        dict.addTuplesIfNotNil(
             (key: "wrapperType", value: self.Wrapper.rawValue),
             (key: "kind", value: self.Kind.rawValue),
             (key: "artistId", value: self.ArtistId),
