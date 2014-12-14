@@ -57,7 +57,7 @@ func asContentExplicitness(object: JSON) -> ContentExplicitness? {
     return nil
 }
 
-public struct Content : SerializableToJSON {
+public struct Content : JSONSerializable {
     public var Wrapper : ContentWrapper
     public var Kind : ContentKind
     public var ArtistId : Int

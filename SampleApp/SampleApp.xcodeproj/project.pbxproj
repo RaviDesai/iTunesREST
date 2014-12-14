@@ -248,6 +248,7 @@
 				418770161A2DF4C3000A9C1D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

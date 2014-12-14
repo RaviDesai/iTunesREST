@@ -7,12 +7,6 @@
 //
 
 import Foundation
-import iTunesREST
 
-var r = RestResponse.Success(200, "OK", nil)
 
-if r.didSucceed() {
-    println("Good")
-} else {
-    println("Bad")
-}
+println("Hello World")

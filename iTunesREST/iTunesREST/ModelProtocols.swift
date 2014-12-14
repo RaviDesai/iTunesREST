@@ -14,7 +14,7 @@ public protocol SerializableToJSON {
 
 public protocol SerializableFromJSON {
     typealias ConcreteType
-    class func createFromJSON(json: JSON) -> ConcreteType?
+    class func createFromJSON(json: JSONDictionary) -> ConcreteType?
 }
 
 public protocol SerializableToJSONArray : SerializableToJSON {

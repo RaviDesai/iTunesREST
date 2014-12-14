@@ -14,8 +14,7 @@ private func buildURLQueryPartAllowedCharacterSet() -> NSCharacterSet {
     return URLQueryPartAllowedCharacterSet
 }
 
-public var URLQueryPartAllowedCharacterSet: NSCharacterSet = buildURLQueryPartAllowedCharacterSet()
-
+internal var URLQueryPartAllowedCharacterSet: NSCharacterSet = buildURLQueryPartAllowedCharacterSet()
 
 public typealias NameValuePair = (name: String, value: String)
 
