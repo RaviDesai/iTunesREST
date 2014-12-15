@@ -9,4 +9,4 @@
 import Foundation
 
 
-println("Hello World")
+println("Hello World from 迅")
