@@ -31,17 +31,23 @@ public typealias RestCallbackFunction = (request: NSURLRequest?, response: RestR
         self.init(startImmediately: true, callback: callback)
     }
     
-    private func connect(toUrl : URLAndParameters, forMethod: String, withBody: NSData?) -> Bool {
+    private func connect(toUrl : URLAndParameters, forMethod: String, withBody: SerializableToJSON?) -> Bool {
         var success: Bool = false
         if let url = NSURL(string: toUrl.description) {
             self.url = url
             let mutableRequest = NSMutableURLRequest(URL: url)
             mutableRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             mutableRequest.HTTPMethod = forMethod
+            
             if let body = withBody {
-                mutableRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                mutableRequest.HTTPBody = body
-                mutableRequest.setValue("\(body.length)", forHTTPHeaderField: "Content-Length")
+                var json = body.convertToJSON()
+                var error:NSError?
+                var jsonData = NSJSONSerialization.dataWithJSONObject(json, options: NSJSONWritingOptions.PrettyPrinted, error: &error)
+                if let data = jsonData {
+                    mutableRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                    mutableRequest.HTTPBody = data
+                    mutableRequest.setValue("\(data.length)", forHTTPHeaderField: "Content-Length")
+                }
             }
             
             self.request = mutableRequest as NSURLRequest;
@@ -57,7 +63,11 @@ public typealias RestCallbackFunction = (request: NSURLRequest?, response: RestR
     }
     
     public func configureForGet(fromUrl: URLAndParameters) -> Bool {
-        return connect(fromUrl, forMethod: "GET", withBody: nil)
+        return self.connect(fromUrl, forMethod: "GET", withBody: nil)
+    }
+    
+    public func configureForPost(fromUrl: URLAndParameters, data:SerializableToJSON) -> Bool {
+        return self.connect(fromUrl, forMethod: "POST", withBody: data)
     }
     
     func connection(connection: NSURLConnection!, didReceiveResponse response: NSURLResponse) {
