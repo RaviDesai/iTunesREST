@@ -18,7 +18,7 @@ internal var URLQueryPartAllowedCharacterSet: NSCharacterSet = buildURLQueryPart
 
 public typealias NameValuePair = (name: String, value: String)
 
-public struct URLAndParameters: Printable, Hashable {
+public struct URLAndParameters: Printable {
     var URL: String
     var Parameters = [NameValuePair]()
     
@@ -44,11 +44,4 @@ public struct URLAndParameters: Printable, Hashable {
             }
         }
     }
-    
-    public var hashValue: Int { get { return self.description.hashValue } }
-    
-}
-
-public func ==(left: URLAndParameters, right: URLAndParameters) -> Bool {
-    return left.description == right.description
 }
