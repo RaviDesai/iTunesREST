@@ -10,33 +10,12 @@ import Foundation
 
 public typealias JSON = AnyObject
 public typealias JSONArray = [JSON]
-public typealias JSONDictionary = [String:JSON]
-
-public func toStringFromDate(format:String, date: NSDate) -> String {
-    var formatter = NSDateFormatter()
-    formatter.dateFormat = format
-    formatter.timeZone = NSTimeZone(forSecondsFromGMT: 0)
-    return formatter.stringFromDate(date)
-}
+public typealias JSONDictionary = [String: JSON]
 
 public func toDateFromString(format: String, dateString: String) -> NSDate? {
     var formatter = NSDateFormatter()
     formatter.dateFormat = format
     return formatter.dateFromString(dateString)
-}
-
-extension Dictionary {
-    mutating func addIfNotNil(key: Key, value: Value?) -> Void {
-        if let myvalue = value {
-            self[key] = myvalue
-        }
-    }
-    
-    mutating func addTuplesIfNotNil(tuples: (key: Key, value: Value?)...) -> Void {
-        for tuple in tuples {
-            self.addIfNotNil(tuple.0, value: tuple.1)
-        }
-    }
 }
 
 func asString(object: JSON) -> String? {
@@ -51,11 +30,11 @@ func asInt(object: JSON) -> Int? {
     return object as? Int
 }
 
-public func asDictionary(object: JSON) -> JSONDictionary? {
+func asDictionary(object: JSON) -> JSONDictionary? {
     return object as? JSONDictionary
 }
 
-public func asArray(object: JSON) -> JSONArray? {
+func asArray(object: JSON) -> JSONArray? {
     return object as? JSONArray
 }
 
@@ -73,21 +52,21 @@ func asDate(format: String)(object: JSON) -> NSDate? {
     return nil
 }
 
-// first parameter is optional, function must exist.
-// if first parameter is not null, function is called with it
-func nullBind<B>(optional: JSON?, f:(JSON -> B?)) -> B? {
+func nullBind<T>(optional: JSON?, asFunction: JSON -> T?) -> T? {
     if let value: JSON = optional {
-        return f(value)
+        return asFunction(value)
     }
-    return .None
+    return nil
 }
 
 // null bind operator
 infix operator >>- { associativity left precedence 150 }
-func >>-<B>(a: JSON?, f: JSON -> B?) -> B? {
-    return nullBind(a, f)
+func >>-<T>(optional: JSON?, asFunction: JSON -> T?) -> T? {
+    if let value: JSON = optional {
+        return asFunction(value)
+    }
+    return nil
 }
-
 
 // applicative apply operators
 infix operator <*> { associativity left }
@@ -95,21 +74,20 @@ infix operator<**> { associativity left }
 
 // Applicative apply operator.  Second parameter cannot be nil,
 // will only apply function if both function and parameter are not nil
-func <*><A, B>(f: (A -> B)?, a: A?) -> B? {
-    if let x = a {
-        if let fx = f {
-            return fx(x)
+func <*><A, B>(curryFunc: (A -> B)?, curryParam: A?) -> B? {
+    if let curryFunction = curryFunc {
+        if let curryParameter = curryParam {
+            return curryFunction(curryParameter)
         }
     }
-    return .None
+    return nil
 }
 
 // Applicative apply operator.  Second parameter can be nil (function
 // takes a null parameter as input).
-func <**><A,B>(f: (A?->B)?, a: A?) -> B? {
-    if let fx = f {
-        return fx(a)
+func <**><A,B>(curryFunc: (A?->B)?, curryParam: A?) -> B? {
+    if let curryFunction = curryFunc {
+        return curryFunction(curryParam)
     }
-    return .None
+    return nil
 }
-

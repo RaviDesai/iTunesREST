@@ -5,7 +5,6 @@
 //  Created by Ravi Desai on 12/2/14.
 //  Copyright (c) 2014 RSD. All rights reserved.
 //
-
 import Foundation
 
 public enum RestResponse : Printable {
@@ -34,10 +33,23 @@ public enum RestResponse : Printable {
     
     public func didSucceed() -> Bool {
         switch(self) {
-        case let .Success(statusCode, localizedMessage, json):
+        case let .Success(_, _, _):
             return true
         default:
             return false
+        }
+    }
+    
+    public func didFail() -> Bool {
+        return !didSucceed()
+    }
+    
+    public func getJSON() -> JSON? {
+        switch(self) {
+        case let .Success(statusCode, localizedMessage, json):
+            return json
+        default:
+            return nil
         }
     }
 
